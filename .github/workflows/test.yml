@@ -1,0 +1,21 @@
+name: test
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Run workflow_next.py's test suite
+        run: python3 -m unittest test_workflow_next -v
+        working-directory: tools/session-ui
+      - name: Sanity-check the CLI itself
+        run: |
+          python3 workflow_next.py '{"type": "build", "stage": "SPEC", "event": "enter", "has_logic": true}'
+        working-directory: tools/session-ui
